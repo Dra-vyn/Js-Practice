@@ -53,14 +53,12 @@ function checkWord(secretWord, inputWord, noOfGuesses) {
     } else if (inputWord.includes(secretWord[index])) {
       cows++;
     }
-
-    index++;
   }
 
-  result.push(bulls, "bulls");
-  result.push(cows, "cows");
+  result.push(bulls, "🐂 bulls");
+  result.push(cows, "🐮 cows");
 
-  console.log(result.join("\n"));
+  console.log(result.join(" "));
 
   return guessWord(secretWord, noOfGuesses - 1);
 }
