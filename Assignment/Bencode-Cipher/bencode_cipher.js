@@ -1,11 +1,27 @@
 function encode(input) {
   switch (typeof input) {
     case "number":
-      return `"i${input}e"`;
+      return 'i' + input + 'e';
     case "string":
-      return `"${input.length}:${input}"`;
+      return input.length + ":" + input
+    case "object":
+      return "l" + checkLength(input) + "e";
   }
 }
+
+function checkLength(input) {
+  let concatString = ``;
+  if (input.length === 0) {
+    return concatString;
+  }
+
+  for (let index = 0; index < input.length; index++) {
+    concatString += encode(input[index]);
+  }
+  
+  return concatString;
+}
+
 
 function emoji(actual, expected) {
   return actual === expected ? "✅" : "🚫";
@@ -27,18 +43,22 @@ function displayOutput(actual, desc, input, expected) {
   return displayFailingCase(input, actual, expected);
 }
 
-function test(desc, input, expected) {
+function testEncode(desc, input, expected) {
   const actual = encode(input);
   return displayOutput(actual, desc, input, expected);
 }
 
 function testAll() {
-  test("Number", 123, `"i123e"`);
-  test("number", -42, `"i-42e"`);
-  test("number", 0, `"i0e"`);
-  test("string", "", `"0:"`);
-  test("string", "hello world", `"11:hello world"`);
-  test("string", "special!@#$chars", `"16:special!@#$chars"`);
+  testEncode("Number", 123, "i123e");
+  testEncode("number", -42, "i-42e");
+  testEncode("number", 0, "i0e");
+  testEncode("string", "", "0:");
+  testEncode("string", "hello world", "11:hello world");
+  testEncode("string", "special!@#$chars", "16:special!@#$chars");
+  testEncode("object", [], "le");
+  testEncode("object", [1], "li1ee");
+  testEncode("object", ["apple", 123, ["banana", -5]], "l5:applei123el6:bananai-5eee");
+  testEncode("object", [0, "", ["test"]], "li0e0:l4:testee");
 }
 
 testAll();
