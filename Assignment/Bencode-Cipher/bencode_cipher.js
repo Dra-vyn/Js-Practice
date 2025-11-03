@@ -3,25 +3,24 @@ function encode(input) {
     case "number":
       return 'i' + input + 'e';
     case "string":
-      return input.length + ":" + input
+      return input.length + ":" + input;
     case "object":
       return "l" + checkLength(input) + "e";
   }
 }
 
 function checkLength(input) {
-  let concatString = ``;
-  if (input.length === 0) {
-    return concatString;
+  let concatString = "";
+
+  if (input.length !== 0) {
+    
+    for (let index = 0; index < input.length; index++) {
+      concatString += encode(input[index]);
+    }
   }
 
-  for (let index = 0; index < input.length; index++) {
-    concatString += encode(input[index]);
-  }
-  
   return concatString;
 }
-
 
 function emoji(actual, expected) {
   return actual === expected ? "✅" : "🚫";
@@ -49,16 +48,34 @@ function testEncode(desc, input, expected) {
 }
 
 function testAll() {
-  testEncode("Number", 123, "i123e");
-  testEncode("number", -42, "i-42e");
-  testEncode("number", 0, "i0e");
+  testNumber();
+  testString();
+  testArray();
+  testNestedArray();
+}
+
+function testNestedArray() {
+  testEncode("nested array", ["apple", 123, ["banana", -5]], "l5:applei123el6:bananai-5eee");
+  testEncode("nested array", [0, "", ["test"]], "li0e0:l4:testee");
+  testEncode("nested array", ["", 0, []], "l0:i0elee");
+  testEncode("nested array", ["one", ["two", ["three"]]], "l3:onel3:twol5:threeeee");
+}
+
+function testArray() {
+  testEncode("array", [], "le");
+  testEncode("array", [1], "li1ee");
+}
+
+function testString() {
   testEncode("string", "", "0:");
   testEncode("string", "hello world", "11:hello world");
   testEncode("string", "special!@#$chars", "16:special!@#$chars");
-  testEncode("object", [], "le");
-  testEncode("object", [1], "li1ee");
-  testEncode("object", ["apple", 123, ["banana", -5]], "l5:applei123el6:bananai-5eee");
-  testEncode("object", [0, "", ["test"]], "li0e0:l4:testee");
+}
+
+function testNumber() {
+  testEncode("Number", 123, "i123e");
+  testEncode("number", -42, "i-42e");
+  testEncode("number", 0, "i0e");
 }
 
 testAll();
