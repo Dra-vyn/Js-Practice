@@ -1,5 +1,10 @@
 function encode(input) {
-  return `"i${input}e"`;
+  switch (typeof input) {
+    case "number":
+      return `"i${input}e"`;
+    case "string":
+      return `"${input.length}:${input}"`;
+  }
 }
 
 function emoji(actual, expected) {
@@ -28,7 +33,12 @@ function test(desc, input, expected) {
 }
 
 function testAll() {
-  test("Number", `123`, `"i123e"`);
+  test("Number", 123, `"i123e"`);
+  test("number", -42, `"i-42e"`);
+  test("number", 0, `"i0e"`);
+  test("string", "", `"0:"`);
+  test("string", "hello world", `"11:hello world"`);
+  test("string", "special!@#$chars", `"16:special!@#$chars"`);
 }
 
 testAll();
