@@ -1,5 +1,11 @@
 let numberOfIteration = 0; // global variable
 
+// ....................................... underline the heading .............................................
+
+function underline(content) {
+  return content + "\n" + "-".repeat(content.length);
+}
+
 // ....................................... sorting the input data .............................................
 
 function sortData(data) {
@@ -58,24 +64,24 @@ function median(data) {
   return (sortedData[Math.ceil(index)] + sortedData[Math.floor(index)]) / 2;
 }
 
-// ........................................... absolute value ..................................................
+// ................................................ deviation ..................................................
 
-function absoluteVal(data) {
+function deviation(data) {
   const array = [];
   const meanVal = mean(data);
-  console.log("mean :", meanVal);
+  display("mean", meanVal);
 
   for (let index = 0; index < data.length; index++) {
     array.push(data[index] - meanVal);
   }
+
   return array;
 }
 
 // ....................................... standard deviation ..................................................
 
 function standardDeviation(data) {
-  const absVal = absoluteVal(data);
-  return calculate(absVal);
+  return calculate(deviation(data));
 }
 
 // .................................. calculate standard deviation  .............................................
@@ -93,11 +99,35 @@ function calculate(absVal) {
 
 // ...............................................main function ................................................
 
-function statistics(numberOfElements, lower, upper) {
-  const data = generateRandomData(numberOfElements, lower, upper);
-  console.log("median :", median(data));
-  console.log(benchmark(data));
-  console.log("standard Deviation : ", standardDeviation(data));
+function statistics() {
+  // const data = generateRandomData(numberOfElements, lower, upper);
+  const heading = prompt("Statistics of :");
+  const numberOfElements = parseInt(prompt("enter the number of elements : "));
+  const data = generateDataArray(numberOfElements);
+  // const data = [0, 0 , 0 , 100];
+  // console.log(benchmark(data));
+
+  console.log(underline(`Statistics of ${heading}`));
+  display("median", median(data));
+  display("standard Deviation", standardDeviation(data));
 }
 
-statistics(6, 50, 100);
+function generateDataArray(numberOfElements) {
+  const data = [];
+
+  for (let index = 1; index <= numberOfElements; index++) {
+    const element = parseInt(prompt(`enter data ${index} :`));
+    console.log(`☑️ ${element} added successfully`);
+    data.push(element);
+  }
+
+  console.clear();
+  return data;
+}
+
+
+function display(string, data) {
+  console.log("🟣", string,"  :  ",data);
+}
+
+statistics();
