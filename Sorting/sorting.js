@@ -1,52 +1,33 @@
-let numberOfIteration = 0; // global variable
-
-// ....................................... underline the heading .............................................
-
-function underline(content) {
+const underline = function (content) {
   return content + "\n" + "-".repeat(content.length);
 }
 
-// ....................................... sorting the input data .............................................
-
-function sortData(data) {
+const sort = function (data) {
   for (let i = 0; i < data.length; i++) {
     for (let j = i + 1; j < data.length; j++) {
-      numberOfIteration++;  // increment operation 
-      if (data[i] > data[j]) {
+      if (isLessThan(data[i], data[j])) {
         const max = data[j];
         data[j] = data[i];
         data[i] = max;
       }
     }
   }
-  return data;   // returns the sorted data by modifiying the original array 
+  return data;
 }
 
-// .................................... generates random data ..................................................
-
-function randomData(lower, upper) {
-  return lower + Math.round(Math.random() * (upper - lower));
+const isStringLengthLessThan = function (a,b) {
+  return a.length < b.length;
 }
 
-function generateRandomData(numberOfElements, lower, upper) {
-  const dataArray = [];
-
-  for (let index = 0; index < numberOfElements; index++) {
-    dataArray.push(randomData(lower, upper));
-  }
-
-  return dataArray;
+const isGreaterOrEqual = function (a, b) {
+  return !isLessThan(a,b);
 }
 
-// ............................................. bench mark ....................................................
-
-function benchmark(data) {
-  return `size : ${data.length} \nnumber of iteration : ${numberOfIteration}`;
+const isLessThan = function (a, b) {
+  return a < b;
 }
 
-// ............................................ mean value ....................................................
-
-function mean(sortedData) {
+const mean = function (sortedData) {
   let sum = 0;
 
   for (let index = 0; index < sortedData.length; index++) {
@@ -55,18 +36,17 @@ function mean(sortedData) {
   return sum / sortedData.length;
 }
 
-//  ...........................................median value .....................................................
-
-function median(data) {
-  const sortedData = sortData(data);
-  console.log(sortedData);
-  const index = (sortedData.length - 1) / 2;
-  return (sortedData[Math.ceil(index)] + sortedData[Math.floor(index)]) / 2;
+const middleElement = function (data){
+  console.log(data);
+  const index = (data.length - 1) / 2;
+  return (data[Math.ceil(index)] + data[Math.floor(index)]) / 2;
 }
 
-// ................................................ deviation ..................................................
+const median = function (data) {
+  return middleElement(sort(data));
+}
 
-function deviation(data) {
+const deviation = function (data) {
   const array = [];
   const meanVal = mean(data);
   display("mean", meanVal);
@@ -78,47 +58,63 @@ function deviation(data) {
   return array;
 }
 
-// ....................................... standard deviation ..................................................
-
-function standardDeviation(data) {
+const standardDeviation = function (data) {
   return calculate(deviation(data));
 }
 
-// .................................. calculate standard deviation  .............................................
-
-function calculate(absVal) {
+const calculate = function (array) {
   let sum = 0;
 
-  for (let index = 0; index < absVal.length; index++) {
-    const sqVal = Math.pow(absVal[index], 2);
+  for (let index = 0; index < array.length; index++) {
+    const sqVal = Math.pow(array[index], 2);
     sum += sqVal;
   }
 
-  return Math.sqrt(sum / absVal.length);
+  return Math.sqrt(sum / array.length);
 }
 
-// ...............................................main function ................................................
+const validate = function (input) {
+  return !isNaN(input);
+}
 
-function statistics() {
-  // const data = generateRandomData(numberOfElements, lower, upper);
+const userInput = function () {
+  const input = parseInt(prompt("enter the number of elements : "));
+
+  if (validate(input)) {
+    return input;
+  }
+  console.log ("invalid value");
+
+  return userInput();
+}
+
+const user = function () {
+  const input = prompt("enter the number of elements : ");
+
+  if (validate(input)) {
+    return input;
+  }
+  console.log ("invalid value");
+
+  return userInput();
+}
+
+const statistics = function () {
   const heading = prompt("Statistics of :");
-  const numberOfElements = parseInt(prompt("enter the number of elements : "));
-  const data = generateDataArray(numberOfElements);
-  // const data = [0, 0 , 0 , 100];
-  // console.log(benchmark(data));
+  const data = generateDataArray(userInput());
 
   console.log(underline(`Statistics of ${heading}`));
   display("median", median(data));
   display("standard Deviation", standardDeviation(data));
 }
 
-function generateDataArray(numberOfElements) {
+const generateDataArray = function (numberOfElements) {
   const data = [];
 
   for (let index = 1; index <= numberOfElements; index++) {
     const element = parseInt(prompt(`enter data ${index} :`));
-    console.log(`☑️ ${element} added successfully`);
     data.push(element);
+    console.log(`☑️ ${element} added successfully`);
   }
 
   console.clear();
@@ -126,8 +122,8 @@ function generateDataArray(numberOfElements) {
 }
 
 
-function display(string, data) {
-  console.log("🟣", string,"  :  ",data);
+const display = function (string, data) {
+  console.log("🟣", string, "  :  ", data);
 }
 
 statistics();
